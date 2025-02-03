@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.db.spellseek.ui.theme.SpellSeekTheme
 import org.db.spellseek.ui.theme.provider
+import kotlin.system.measureTimeMillis
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,6 +118,7 @@ fun WordFind(
     var resultWords by remember { mutableStateOf(listOf<String>()) }
     var count by remember { mutableStateOf(listOf<Int>()) }
     var resultVisible by remember { mutableStateOf(false) }
+    var executionTime by remember { mutableLongStateOf(0L) }
 
     val wordLimit by wordFindModel.wordLimit
 
@@ -217,9 +220,10 @@ fun WordFind(
                     ),
                     onClick = {
                         resultVisible = true
-
-
-                        resultWords = wordFindModel.findWords(letters, center)
+                        val time = measureTimeMillis {
+                            resultWords = wordFindModel.findWords(letters, center)
+                        }
+                        executionTime = time
                         count = wordFindModel.wordCount()
                     }
                 ) {
@@ -289,7 +293,7 @@ fun WordFind(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${resultWords.size} words",
+                        text = "${resultWords.size} words - time $executionTime mS",
                         fontSize = 20.sp,
                         color = MaterialTheme.colorScheme.onTertiary, // Equivalent to Colors.orange
                         fontWeight = FontWeight.Normal
