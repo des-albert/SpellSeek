@@ -15,14 +15,14 @@ val provider = GoogleFont.Provider(
 val bodyFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Montserrat"),
-        fontProvider = org.db.spellseek.ui.theme.provider,
+        fontProvider = provider,
     )
 )
 
 val displayFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Orbitron"),
-        fontProvider = org.db.spellseek.ui.theme.provider,
+        fontProvider = provider,
     )
 )
 
